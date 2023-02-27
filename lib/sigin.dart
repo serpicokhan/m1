@@ -36,7 +36,7 @@ class _SignInPageState extends State<SignInPage> {
         _emailController.text = signInInfo['email'] ?? '';
         _passwordController.text = signInInfo['password'] ?? '';
       });
-      if (signInInfo['email'] != null && signInInfo['password'] != null) {
+      if (signInInfo['email'] != '' && signInInfo['password'] != '') {
         // If the user is signed in, redirect to the home page
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(

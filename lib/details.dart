@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:m1/purchased_item.dart';
+
+import 'myscreen.dart';
 
 class MyTabPage extends StatelessWidget {
   @override
@@ -19,11 +22,7 @@ class MyTabPage extends StatelessWidget {
         body: TabBarView(
           children: [
             // content of the first tab
-            Container(
-              child: Center(
-                child: Text('Tab 1 content'),
-              ),
-            ),
+            ItemListScreen(),
 
             // content of the second tab
             Container(

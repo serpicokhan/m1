@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:m1/details.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:m1/model/purchase.dart';
 
 class MyScreen extends StatefulWidget {
   @override
@@ -98,6 +101,19 @@ class Screen3 extends StatelessWidget {
   }
 }
 
+Future<List<Purchase>> fetchPosts() async {
+  final response =
+      await http.get(Uri.parse('http://192.168.2.60:8000/Purchase/api/'));
+  if (response.statusCode == 200) {
+    final List<dynamic> data =
+        json.decode(Utf8Decoder().convert(response.bodyBytes));
+
+    return data.map((post) => Purchase.fromJson(post)).toList();
+  } else {
+    throw Exception('Failed to fetch posts');
+  }
+}
+
 class CategoryChip extends StatefulWidget {
   final List<String> categories;
   final Function(String) onCategorySelected;
@@ -153,28 +169,35 @@ class EmailListScreen extends StatefulWidget {
 }
 
 class _EmailListScreenState extends State<EmailListScreen> {
-  List<Email> emails = [
-    Email(
-        sender: 'John Doe',
-        subject: 'Meeting Request',
-        timestamp: '10:30 AM',
-        body: 'Hi, I would like to schedule a meeting with you.'),
-    Email(
-        sender: 'Jane Smith',
-        subject: 'Vacation Plans',
-        timestamp: '9:00 AM',
-        body: 'Hey, do you want to join me on a trip to Hawaii?'),
-    Email(
-        sender: 'Mark Johnson',
-        subject: 'Project Update',
-        timestamp: '8:30 AM',
-        body: 'Here is the latest progress report for the project.'),
-    Email(
-        sender: 'Sarah Lee',
-        subject: 'Product Launch',
-        timestamp: 'Yesterday',
-        body: 'We are excited to announce the launch of our new product.'),
-  ];
+  late Future<List<Purchase>> _posts;
+  @override
+  void initState() {
+    super.initState();
+    _posts = fetchPosts();
+  }
+
+  // List<Email> emails = [
+  //   Email(
+  //       sender: 'John Doe',
+  //       subject: 'Meeting Request',
+  //       timestamp: '10:30 AM',
+  //       body: 'Hi, I would like to schedule a meeting with you.'),
+  //   Email(
+  //       sender: 'Jane Smith',
+  //       subject: 'Vacation Plans',
+  //       timestamp: '9:00 AM',
+  //       body: 'Hey, do you want to join me on a trip to Hawaii?'),
+  //   Email(
+  //       sender: 'Mark Johnson',
+  //       subject: 'Project Update',
+  //       timestamp: '8:30 AM',
+  //       body: 'Here is the latest progress report for the project.'),
+  //   Email(
+  //       sender: 'Sarah Lee',
+  //       subject: 'Product Launch',
+  //       timestamp: 'Yesterday',
+  //       body: 'We are excited to announce the launch of our new product.'),
+  // ];
   String _selectedCategory = 'All'; // Default value
 
   List<String> _data = [
@@ -241,32 +264,76 @@ class _EmailListScreenState extends State<EmailListScreen> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: emails.length,
-              itemBuilder: (BuildContext context, int index) {
-                final email = emails[index];
-                return Dismissible(
-                  key: Key(email.timestamp),
-                  onDismissed: (direction) {
-                    setState(() {
-                      emails.removeAt(index);
-                    });
-                  },
-                  background: Container(
-                    color: Colors.red,
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.only(right: 16),
-                    child: Icon(
-                      Icons.delete,
-                      color: Colors.white,
-                    ),
-                  ),
-                  child: EmailListItem(
-                    sender: email.sender,
-                    subject: email.subject,
-                    timestamp: email.timestamp,
-                  ),
-                );
+            // child: ListView.builder(
+            //   itemCount: emails.length,
+            //   itemBuilder: (BuildContext context, int index) {
+            //     final email = emails[index];
+            //     return Dismissible(
+            //       key: Key(email.timestamp),
+            //       onDismissed: (direction) {
+            //         setState(() {
+            //           emails.removeAt(index);
+            //         });
+            //       },
+            //       background: Container(
+            //         color: Colors.red,
+            //         alignment: Alignment.centerRight,
+            //         padding: EdgeInsets.only(right: 16),
+            //         child: Icon(
+            //           Icons.delete,
+            //           color: Colors.white,
+            //         ),
+            //       ),
+            //       child: EmailListItem(
+            //         sender: email.sender,
+            //         subject: email.subject,
+            //         timestamp: email.timestamp,
+            //       ),
+            //     );
+            //   },
+            // ),
+            child: FutureBuilder<List<Purchase>>(
+              future: _posts,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      // return ListTile(
+                      //   title: Text(snapshot
+                      //       .data![index].purchaseRequestRequestedUser
+                      //       .toString()),
+                      //   subtitle: Text(snapshot.data![index].id.toString()),
+                      // );
+                      final email = snapshot.data![index];
+                      return Dismissible(
+                        key: Key(email.id.toString()),
+                        onDismissed: (direction) {
+                          setState(() {
+                            snapshot.data!.removeAt(index);
+                          });
+                        },
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          padding: EdgeInsets.only(right: 16),
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                        ),
+                        child: EmailListItem(
+                          sender: email.purchaseRequestRequestedUser.toString(),
+                          subject: email.id.toString(),
+                          timestamp: email.id.toString(),
+                        ),
+                      );
+                    },
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+                return CircularProgressIndicator();
               },
             ),
           ),
