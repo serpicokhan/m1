@@ -323,9 +323,9 @@ class _EmailListScreenState extends State<EmailListScreen> {
                           ),
                         ),
                         child: EmailListItem(
-                          sender: email.purchaseRequestRequestedUser.toString(),
+                          sender: email.purchaseRequestedUser.toString(),
                           subject: email.id.toString(),
-                          timestamp: email.id.toString(),
+                          timestamp: email.purchaseDateTo.toString(),
                         ),
                       );
                     },
