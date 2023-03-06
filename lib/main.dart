@@ -1,3 +1,4 @@
+//  flutter build apk --split-per-abi
 import 'package:flutter/material.dart';
 import 'package:m1/sigin.dart';
 import 'package:shimmer/shimmer.dart';
