@@ -3,6 +3,7 @@ import 'package:m1/details.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:m1/model/purchase.dart';
+import 'package:m1/pages/reqForm.dart';
 
 class MyScreen extends StatefulWidget {
   @override
@@ -341,7 +342,12 @@ class _EmailListScreenState extends State<EmailListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PurchaseRequestForm()),
+          );
+        },
       ),
     );
   }
