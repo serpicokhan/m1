@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+import 'package:m1/pages/purchased_item.dart';
+import 'package:m1/purchased_item.dart';
+
+import 'file_list.dart';
+
+class MyTabPage2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3, // number of tabs
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('My Tab Page'),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: 'Tab 1'),
+              Tab(text: 'Tab 2'),
+              Tab(text: 'Tab 3'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            // content of the first tab
+            ItemListScreen2(),
+
+            // content of the second tab
+            ItemListScreen3(),
+
+            // content of the third tab
+            Container(
+              child: Center(
+                child: Text('Tab 3 content'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

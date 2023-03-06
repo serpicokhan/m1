@@ -50,12 +50,12 @@ class _CategoryChipState extends State<CategoryChip> {
   }
 }
 
-class ItemListScreen extends StatefulWidget {
+class ItemListScreen2 extends StatefulWidget {
   @override
   _ItemListScreenState createState() => _ItemListScreenState();
 }
 
-class _ItemListScreenState extends State<ItemListScreen> {
+class _ItemListScreenState extends State<ItemListScreen2> {
   List<Email> emails = [
     Email(
         sender: 'John Doe',
@@ -211,7 +211,12 @@ class _ItemListScreenState extends State<ItemListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PurchaseRequestForm()),
+          );
+        },
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:m1/details.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:m1/model/purchase.dart';
+import 'package:m1/pages/detailed.dart';
 import 'package:m1/pages/reqForm.dart';
 
 class MyScreen extends StatefulWidget {
@@ -345,7 +346,7 @@ class _EmailListScreenState extends State<EmailListScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PurchaseRequestForm()),
+            MaterialPageRoute(builder: (context) => MyTabPage2()),
           );
         },
       ),
@@ -380,7 +381,7 @@ class EmailListItem extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyTabPage()),
+          MaterialPageRoute(builder: (context) => MyTabPage2()),
         );
       },
       child: ListTile(
