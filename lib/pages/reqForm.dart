@@ -84,14 +84,14 @@ class _PurchaseRequestFormState extends State<PurchaseRequestForm> {
   }
 
   Future<void> _sendFormToApi() async {
-    final url = 'https://automation.chbk.run/Purchase/api/form';
+    final url = 'https://automation.chbk.run/Purchase/form/api';
     final response = await http.post(
       Uri.parse(url),
       body: {
-        'purchaseRequestAssetMakan': purchaseRequestAssetMakan,
-        'purchaseRequestAsset': purchaseRequestAsset,
-        'purchaseRequestPartName': purchaseRequestPartName,
-        'purchaseRequestAssetQty': purchaseRequestAssetQty,
+        'PurchaseRequestAssetMakan': 1,
+        'PurchaseRequestAsset': 1,
+        'PurchaseRequestPartName': 1,
+        'PurchaseRequestAssetQty': 100,
       },
     );
     if (response.statusCode == 200) {
@@ -304,6 +304,7 @@ class _PurchaseRequestFormState extends State<PurchaseRequestForm> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
+                      _sendFormToApi();
                       // TODO: Submit the form data to a backend server
                     }
                   },

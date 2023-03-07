@@ -8,9 +8,9 @@ class MyDialog extends StatefulWidget {
 class _MyDialogState extends State<MyDialog> {
   final TextEditingController _searchController = TextEditingController();
   List<String> _options = [
-    'Option 1',
-    'Option 2',
-    'Option 3',
+    '1',
+    '2',
+    '3',
     'Option 4',
     'Option 5',
     'Option 6',
