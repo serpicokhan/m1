@@ -105,7 +105,7 @@ class Screen3 extends StatelessWidget {
 
 Future<List<Purchase>> fetchPosts() async {
   final response =
-      await http.get(Uri.parse('http://192.168.2.60:8000/Purchase/api/'));
+      await http.get(Uri.parse('https://automation.chbk.run/Purchase/api/'));
   if (response.statusCode == 200) {
     final List<dynamic> data =
         json.decode(Utf8Decoder().convert(response.bodyBytes));
