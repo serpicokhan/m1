@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:m1/pages/partdialog.dart';
+import 'package:http/http.dart' as http;
+
+import 'dialog.dart';
 
 class PurchaseRequestForm extends StatefulWidget {
   const PurchaseRequestForm({Key? key}) : super(key: key);
@@ -28,6 +32,75 @@ class _PurchaseRequestFormState extends State<PurchaseRequestForm> {
   String? purchaseRequestAuthUser;
   String? purchaseRequestPurchase;
 
+  String? _selectedOption = '';
+  String? _textValue = '';
+  String? _PartValue = '';
+  void _updateSelectedOption(String option) {
+    setState(() {
+      _selectedOption = option;
+    });
+  }
+
+  void _updatePartSelectedOption(String option) {
+    setState(() {
+      _PartValue = option;
+    });
+  }
+
+  void _updateTextValue(String value) {
+    setState(() {
+      _textValue = value;
+    });
+  }
+
+  Future<void> _showDialog() async {
+    // Show dialog and get selected option
+    final selectedOption = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return MyDialog();
+      },
+    );
+
+    // Update selected option in form
+    if (selectedOption != null) {
+      _updateSelectedOption(selectedOption);
+    }
+  }
+
+  Future<void> _showPartDialog() async {
+    // Show dialog and get selected option
+    final selectedOption = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return MyPartDialog();
+      },
+    );
+
+    // Update selected option in form
+    if (selectedOption != null) {
+      _updatePartSelectedOption(selectedOption);
+    }
+  }
+
+  Future<void> _sendFormToApi() async {
+    final url = 'https://automation.chbk.run/Purchase/api/form';
+    final response = await http.post(
+      Uri.parse(url),
+      body: {
+        'purchaseRequestAssetMakan': purchaseRequestAssetMakan,
+        'purchaseRequestAsset': purchaseRequestAsset,
+        'purchaseRequestPartName': purchaseRequestPartName,
+        'purchaseRequestAssetQty': purchaseRequestAssetQty,
+      },
+    );
+    if (response.statusCode == 200) {
+      // Handle success
+    } else {
+      // Handle error
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,155 +117,6 @@ class _PurchaseRequestFormState extends State<PurchaseRequestForm> {
               children: [
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'ID',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter an ID';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    id = int.tryParse(value!);
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Requested User',
-                  ),
-                  onSaved: (value) {
-                    purchaseRequestRequestedUser = value;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Status',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a status';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    purchaseRequestStatus = int.tryParse(value!);
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Completion Date',
-                  ),
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2100),
-                    );
-                    setState(() {
-                      purchaseRequestCompletionDate = date;
-                    });
-                  },
-                  readOnly: true,
-                  controller: TextEditingController(
-                    text: purchaseRequestCompletionDate != null
-                        ? purchaseRequestCompletionDate.toString()
-                        : '',
-                  ),
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'More Info',
-                  ),
-                  onSaved: (value) {
-                    purchaseRequestMoreInfo = value;
-                  },
-                ),
-                SwitchListTile(
-                  title: Text('Asset Not in Inventory'),
-                  value: purchaseRequestAssetNotInInventory ?? false,
-                  onChanged: (value) {
-                    setState(() {
-                      purchaseRequestAssetNotInInventory = value;
-                    });
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Asset Quantity',
-                  ),
-                  onSaved: (value) {
-                    purchaseRequestAssetQty = double.tryParse(value!);
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Asset Quantity Not',
-                  ),
-                  onSaved: (value) {
-                    purchaseRequestAssetQtyNot = int.tryParse(value!);
-                  },
-                ),
-                SwitchListTile(
-                  title: Text('Asset Not'),
-                  value: purchaseRequestAssetNot ?? false,
-                  onChanged: (value) {
-                    setState(() {
-                      purchaseRequestAssetNot = value;
-                    });
-                  },
-                ),
-                SwitchListTile(
-                  title: Text('Not in List'),
-                  value: purchaseRequestNotInList ?? false,
-                  onChanged: (value) {
-                    setState(() {
-                      purchaseRequestNotInList = value;
-                    });
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Date To',
-                  ),
-                  onSaved: (value) {
-                    purchaseRequestDateTo = value;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Timestamp',
-                  ),
-                  onSaved: (value) {
-                    settingTimestamp = value;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Tayeed User',
-                  ),
-                  onSaved: (value) {
-                    purchaseRequestTayeedUser = value;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Part Name',
-                  ),
-                  onSaved: (value) {
-                    purchaseRequestPartName = int.tryParse(value!);
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Asset',
-                  ),
-                  onSaved: (value) {
-                    purchaseRequestAsset = int.tryParse(value!);
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
                     labelText: 'Asset Makan',
                   ),
                   onSaved: (value) {
@@ -201,20 +125,180 @@ class _PurchaseRequestFormState extends State<PurchaseRequestForm> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Auth User',
+                    labelText: 'Asset',
                   ),
+                  onTap: _showDialog,
+                  readOnly: true,
+                  controller: TextEditingController(text: _selectedOption),
                   onSaved: (value) {
-                    purchaseRequestAuthUser = value;
+                    purchaseRequestAsset = int.tryParse(value!);
                   },
                 ),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Purchase',
+                    labelText: 'Part Name',
                   ),
+                  onTap: _showPartDialog,
+                  readOnly: true,
+                  controller: TextEditingController(text: _selectedOption),
                   onSaved: (value) {
-                    purchaseRequestPurchase = value;
+                    purchaseRequestPartName = int.tryParse(value!);
                   },
                 ),
+                //    onTap: _showDialog,
+                // readOnly: true,
+                // controller: TextEditingController(text: _selectedOption),
+
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //     labelText: 'ID',
+                //   ),
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'Please enter an ID';
+                //     }
+                //     return null;
+                //   },
+                //   onSaved: (value) {
+                //     id = int.tryParse(value!);
+                //   },
+                // ),
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //     labelText: 'Requested User',
+                //   ),
+                //   onSaved: (value) {
+                //     purchaseRequestRequestedUser = value;
+                //   },
+                // ),
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //     labelText: 'Status',
+                //   ),
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'Please enter a status';
+                //     }
+                //     return null;
+                //   },
+                //   onSaved: (value) {
+                //     purchaseRequestStatus = int.tryParse(value!);
+                //   },
+                // ),
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //     labelText: 'Completion Date',
+                //   ),
+                //   onTap: () async {
+                //     final date = await showDatePicker(
+                //       context: context,
+                //       initialDate: DateTime.now(),
+                //       firstDate: DateTime.now(),
+                //       lastDate: DateTime(2100),
+                //     );
+                //     setState(() {
+                //       purchaseRequestCompletionDate = date;
+                //     });
+                //   },
+                //   readOnly: true,
+                //   controller: TextEditingController(
+                //     text: purchaseRequestCompletionDate != null
+                //         ? purchaseRequestCompletionDate.toString()
+                //         : '',
+                //   ),
+                // ),
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //     labelText: 'More Info',
+                //   ),
+                //   onSaved: (value) {
+                //     purchaseRequestMoreInfo = value;
+                //   },
+                // ),
+                // SwitchListTile(
+                //   title: Text('Asset Not in Inventory'),
+                //   value: purchaseRequestAssetNotInInventory ?? false,
+                //   onChanged: (value) {
+                //     setState(() {
+                //       purchaseRequestAssetNotInInventory = value;
+                //     });
+                //   },
+                // ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'تعداد',
+                  ),
+                  onSaved: (value) {
+                    purchaseRequestAssetQty = double.tryParse(value!);
+                  },
+                ),
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //     labelText: 'Asset Quantity Not',
+                //   ),
+                //   onSaved: (value) {
+                //     purchaseRequestAssetQtyNot = int.tryParse(value!);
+                //   },
+                // ),
+                // SwitchListTile(
+                //   title: Text('Asset Not'),
+                //   value: purchaseRequestAssetNot ?? false,
+                //   onChanged: (value) {
+                //     setState(() {
+                //       purchaseRequestAssetNot = value;
+                //     });
+                //   },
+                // ),
+                // SwitchListTile(
+                //   title: Text('Not in List'),
+                //   value: purchaseRequestNotInList ?? false,
+                //   onChanged: (value) {
+                //     setState(() {
+                //       purchaseRequestNotInList = value;
+                //     });
+                //   },
+                // ),
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //     labelText: 'Date To',
+                //   ),
+                //   onSaved: (value) {
+                //     purchaseRequestDateTo = value;
+                //   },
+                // ),
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //     labelText: 'Timestamp',
+                //   ),
+                //   onSaved: (value) {
+                //     settingTimestamp = value;
+                //   },
+                // ),
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //     labelText: 'Tayeed User',
+                //   ),
+                //   onSaved: (value) {
+                //     purchaseRequestTayeedUser = value;
+                //   },
+                // ),
+
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //     labelText: 'Auth User',
+                //   ),
+                //   onSaved: (value) {
+                //     purchaseRequestAuthUser = value;
+                //   },
+                // ),
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //     labelText: 'Purchase',
+                //   ),
+                //   onSaved: (value) {
+                //     purchaseRequestPurchase = value;
+                //   },
+                // ),
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
