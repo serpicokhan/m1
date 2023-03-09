@@ -4,11 +4,26 @@ import 'package:m1/sigin.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'firebase_messaging.dart';
 import 'myscreen.dart';
 
 // Save sign in info
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // ignore: unused_local_variable
+  FirebaseMessagingService messagingService = FirebaseMessagingService();
+  await messagingService.setupFirebaseMessaging();
+  String? token = await messagingService.getToken();
+
+  // Subscribe to a topic
+  messagingService.subscribeToTopic('test_topic');
+
+  // Listen for push notifications
+  messagingService.setupMessageHandler((Map<String, dynamic> message) {
+    print('Received message: $message');
+  });
+  print(token);
   runApp(MyApp());
 }
 

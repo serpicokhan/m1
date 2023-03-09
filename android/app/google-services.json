@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "758446878843",
+    "project_id": "atlas-22289",
+    "storage_bucket": "atlas-22289.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758446878843:android:26d99ab37554e7d10cf2de",
+        "android_client_info": {
+          "package_name": "com.sarvrayan.m1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "758446878843-n4c46ptvm7esv0pd6aaqqgqdhubd4kfa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1qsp5EIkUefi_Pta7SR1Zxd4QvaI4KYA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "758446878843-n4c46ptvm7esv0pd6aaqqgqdhubd4kfa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
